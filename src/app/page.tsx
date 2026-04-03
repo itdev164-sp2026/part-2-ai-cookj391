@@ -1,75 +1,58 @@
-import { Code, Cpu, Layout, Rocket, Server, ShieldCheck } from "lucide-react";
+import { Code, Layout, Database, Globe, Server, Layers } from "lucide-react";
+import { SkillCard } from "@/components/skill-card";
 
-const assignments = [
+const skills = [
   {
-    week: 1,
-    title: "Setup & Next.js Scaffolding",
-    description: "Initialize your project, configure tooling, and verify your AI-assisted workflow.",
-    icon: Rocket,
-  },
-  {
-    week: 2,
-    title: "Agentic UI with Shadcn",
-    description: "Build dashboard layouts and reusable components with Shadcn/ui and Tailwind.",
-    icon: Layout,
-  },
-  {
-    week: 3,
-    title: "Server Components & Data Fetching",
-    description: "Leverage React Server Components and async data patterns in the App Router.",
-    icon: Server,
-  },
-  {
-    week: 4,
-    title: "AI-Driven Forms & Validation",
-    description: "Create forms with Zod schemas and Server Actions for type-safe data handling.",
+    title: "C++",
+    description: "Proficient in systems and performance-focused programming.",
     icon: Code,
   },
   {
-    week: 5,
-    title: "Full-Stack Integration",
-    description: "Connect Supabase for authentication, database operations, and real-time data.",
-    icon: Cpu,
+    title: "C# and Java",
+    description: "Object-oriented development for desktop and enterprise applications.",
+    icon: Server,
   },
   {
-    week: 6,
-    title: "Deployment & AI Testing",
-    description: "Deploy to Vercel, set up webhooks, and write AI-assisted tests.",
-    icon: ShieldCheck,
+    title: "UI design (CSS & React)",
+    description: "Responsive component-driven UI design using Tailwind and React.",
+    icon: Layout,
+  },
+  {
+    title: "Database Management",
+    description: "Designing schemas, queries, and maintaining data integrity.",
+    icon: Database,
+  },
+  {
+    title: "Web Applications (JavaScript)",
+    description: "Building interactive frontends and API-driven apps.",
+    icon: Globe,
+  },
+  {
+    title: "System Architecture & Design",
+    description: "Planning scalable systems and service interactions.",
+    icon: Layers,
   },
 ];
 
-export default function HomePage() {
+export default function HomePage(): JSX.Element {
   return (
     <div className="space-y-8">
       <section className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Course Dashboard
-        </h1>
-        <p className="text-muted-foreground">
-          ITDEV-164 — Web Programming 2: AI-native full-stack development with
-          Next.js, Tailwind&nbsp;CSS, and Supabase.
+        <h1 className="text-3xl font-bold tracking-tight">Josiah Cook</h1>
+        <p className="text-muted-foreground max-w-2xl">
+          I am currently a student in MATC's web and software development program. I
+          have been taking classes part time since 2023, and am on track to graduate
+          in December of this year.
         </p>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {assignments.map(({ week, title, description, icon: Icon }) => (
-          <div
-            key={week}
-            className="group rounded-lg border border-border bg-card p-5 transition-colors hover:border-primary/40"
-          >
-            <div className="mb-3 flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-md bg-muted">
-                <Icon className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-primary" />
-              </div>
-              <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                Week {week}
-              </span>
-            </div>
-            <h2 className="mb-1 font-semibold leading-snug">{title}</h2>
-            <p className="text-sm text-muted-foreground">{description}</p>
-          </div>
-        ))}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">Skills</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {skills.map(({ title, description, icon: Icon }) => (
+            <SkillCard key={title} title={title} description={description} Icon={Icon} />
+          ))}
+        </div>
       </section>
     </div>
   );
