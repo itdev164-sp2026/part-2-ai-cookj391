@@ -1,5 +1,6 @@
 import { Code, Layout, Database, Globe, Server, Layers } from "lucide-react";
 import { SkillCard } from "@/components/skill-card";
+import { JSX } from "react";
 
 const skills = [
   {
@@ -40,7 +41,7 @@ export default function HomePage(): JSX.Element {
       <section className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">Josiah Cook</h1>
         <p className="text-muted-foreground max-w-2xl">
-          I am currently a student in MATC's web and software development program. I
+          I am currently a student in MATCs web and software development program. I
           have been taking classes part time since 2023, and am on track to graduate
           in December of this year.
         </p>
