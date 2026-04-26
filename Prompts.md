@@ -90,3 +90,46 @@ The agent said the error was exactly what the stack said: SideMenuButton was ren
 No. The agent preserved all of my Activity-1 code. 
 >What did you learn about giving the Agent context about existing code you want to preserve? 
 I learned that it is better to air on the side of caution when it comes to preserving existing functionality. If there are components that have partial functionality, explicitly telling the agent to maintain that functionality when fixing other issues can help to guarantee the end result is correct. 
+
+## Activity 3: Server-Side Data with Supabase
+
+### Prompt 1 
+
+**What I asked:**
+>Using the Supabase clinet at src/lib/supabase.ts, create a new Server Component
+at src/app/projects/page.tsx that:
+
+1. Fetches allr ecords from the "projects" table in Supabase
+2. Displays them in a profesiional layout using shadcn/ui Card components
+(run `npx shadcn@latest add card` if needed)
+3. Each card should show the project title, description, and a status badge.
+4. The status badge should be color-coded:
+- "active" = green
+- "completed" = blue
+- "archived" = gray
+
+Use @workspace context to match the styling of our existing Dashboard. 
+This must be a React server component (async function, no "use client").
+Do NOT use useEffect or useState for data fetching. 
+
+**What happened:**
+
+>The agent began implementing an async server component at the projects route that reads from my existing Supabase client and renders a dashboard-matching card grid with color-coded status badges. 
+
+The agent asked for permission to run:
+ npx shadcn@latest add card.
+
+ I gave permission and the agent completed the task. When inspecting the code I noticed an error in page.tsk and gave the agent a new prompt detailed below. 
+
+ **What I asked:**
+
+ > In page.tsk your export function has an error at line 29. "Cannot find namespace 'JSZ'"
+
+ **What happened:**
+
+ > The agent fixed the type error in the projects page by updating the return type so it doesn't rely on the global JSX namespace. It imported 'ReactElement' from React, and changed the function signature to Promise<ReactElement> from Promise<JSX.Element>. Validation check showed no errors in page.tsx.
+
+ ### Reflection
+ >Fetching data on the server feels 'snappier' than using a useEffect. I like the implications this has for fast page load times, and database updates pushing to the client without reloading the server. 
+
+ > One quick note: I did not need to run the Breadcrumb fix. My page already updated the Breadcrumb to Projects on click. I must have fixed that in the previous session. 
