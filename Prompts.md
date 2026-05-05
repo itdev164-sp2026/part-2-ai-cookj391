@@ -133,3 +133,75 @@ The agent asked for permission to run:
  >Fetching data on the server feels 'snappier' than using a useEffect. I like the implications this has for fast page load times, and database updates pushing to the client without reloading the server. 
 
  > One quick note: I did not need to run the Breadcrumb fix. My page already updated the Breadcrumb to Projects on click. I must have fixed that in the previous session. 
+
+ ## Activity 4: AI-Driven Forms & Validation
+
+ ### Prompt 1
+
+ **What I asked:**
+
+ > Create a Zod validation schema in a new file src/lib/schemas.ts for a "Project" with the following fields:
+
+- title: string, minimum 3 characters, with a custom error message
+"Title must be at least 3 characters"
+
+- description: string, minimum 10 characters, with a custom error message
+"Description must be at least 10 characters"
+
+- status: enum with avlues "active", "completed", "archived" 
+
+Export the schema and also export the inferred TypeScript type using z.infer.
+
+**What happened:**
+
+> The agent created the schema correctly and exported both the schema and the inferred type. 
+
+### Prompt 2
+
+**What I asked:**
+
+>Using the Zod schema from src/lib/schemas.ts, do the following:
+
+1. Create a form component at src/components/project-form.tsx that: 
+- Is a Client Component ("use client") because it uses react-hook-form hooks
+- Uses react-hook-form with the zodResolver from @hookform/resolvers for validation
+- Uses shadcn/ui Field, FieldLabel, and FieldError for field layout
+- Uses shadcn/ui Input for title, Textarea for description, and Select for status
+- Shows inline error messages under each field when validation fails
+- Has a "Create Project" submit button
+- Shows a sonner toast notification on successful submission
+
+2. Create a Server Action at src/app/actions.ts that:
+- Has "use server" at the top of the file
+- Accepts the validated form data
+- Validates it again with the Zod schema (server-side validation)
+- Inserts the validated data into the Supabase "projects" table
+- Returns a success or error response
+
+3. Create a new page at src/app/projects/new/page.tsx that renders the project form within the dashboard layout. 
+
+4. Add a "New Project" button to the existing projects page (src/app/projects/page.tsx) that links to /projects/new. 
+
+use @workspace to match the existing project styling. 
+
+**What happened:**
+
+>The agent correctly created all the requested files. It connected the form submission to the Server action and it included the server-side Zod validation. 
+
+### Prompt 3
+
+**What I asked:**
+
+>runtime error on src/app/projects/page.tsx
+
+Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+
+**What happened:**
+
+>The agent identified the bug in it's code and correctly diagnosed the issue. It said that the "error occurred because <Link> was wrapping an <a> tag, which is invalid in Next.js 13+." Likely due to the AI being trained on older versions of libraries. The Projects page now renders correctly and displays the updated list of projects. 
+
+### Reflection
+
+>How does the Schema-First approach with Zod change the way you think about forms? 
+
+>The schema-first approach centralizes the validation to one location and feels like a cleaner way to ensure garbage data is not stored in the database. It does this by attaching the requirements to the schema directly, and having Zod acting as a guard that validates the data against those requirements.  Previous courses have had me writing multiple if-then statements to check for correct data integrity. 
