@@ -5,6 +5,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import type { ReactElement } from "react";
 
@@ -36,11 +38,18 @@ export default async function ProjectsPage(): Promise<ReactElement> {
 
   return (
     <div className="space-y-8">
-      <section className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Projects</h1>
-        <p className="max-w-2xl text-muted-foreground">
-          Track active work, completed deliverables, and archived initiatives.
-        </p>
+      <section className="flex items-start justify-between gap-4">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Projects</h1>
+          <p className="max-w-2xl text-muted-foreground">
+            Track active work, completed deliverables, and archived initiatives.
+          </p>
+        </div>
+        <div>
+          <Button asChild>
+            <Link href="/projects/new">New Project</Link>
+          </Button>
+        </div>
       </section>
 
       {error ? (
