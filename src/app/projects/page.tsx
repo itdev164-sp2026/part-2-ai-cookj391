@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import type { ReactElement } from "react";
 
 type ProjectStatus = "active" | "completed" | "archived";
@@ -30,6 +30,7 @@ function getStatusLabel(status: ProjectStatus): string {
 }
 
 export default async function ProjectsPage(): Promise<ReactElement> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("projects")
     .select("id, title, description, status");
