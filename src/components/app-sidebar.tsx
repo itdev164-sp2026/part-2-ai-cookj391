@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, FolderOpen, Home, Settings } from "lucide-react";
+import { BookOpen, FolderOpen, Home, LogOut, Settings } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
 
 import { ModeToggle } from "@/components/mode-toggle";
+import { signOut } from "@/app/actions";
 import {
   Sidebar,
   SidebarContent,
@@ -38,7 +40,11 @@ const navigationItems = [
   },
 ];
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  user: User | null;
+}
+
+export function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
 
@@ -46,6 +52,10 @@ export function AppSidebar() {
     if (isMobile) {
       setOpenMobile(false);
     }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
   };
 
   return (
@@ -108,6 +118,21 @@ export function AppSidebar() {
           </div>
           <ModeToggle />
         </div>
+
+        {user && (
+          <button
+            onClick={handleSignOut}
+            className="flex w-full items-center justify-between gap-3 rounded-xl bg-destructive/10 px-3 py-2 text-sm text-destructive hover:bg-destructive/20"
+          >
+            <div className="min-w-0">
+              <p className="truncate font-medium">Sign Out</p>
+              <p className="truncate text-xs text-destructive/70">
+                {user.email}
+              </p>
+            </div>
+            <LogOut className="size-4 flex-shrink-0" />
+          </button>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
