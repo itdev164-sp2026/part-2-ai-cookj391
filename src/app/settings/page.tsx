@@ -1,4 +1,4 @@
-export default function SettingsPage(): JSX.Element {
+export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <section className="space-y-2">
