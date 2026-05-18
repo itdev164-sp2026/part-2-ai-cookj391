@@ -271,3 +271,81 @@ The agent handled the middleware, login page, sign out, and data scoping all in 
 > The agent handled the creation of middleware.ts with zero additional prompts. I did manually add the files to the working set for context. I wasn't expecting package.json and the corresponding package-lock.json to need changes but given the command line requests the agent gave me during the build, that makes sense now. (I think I needed some additional packages installed.)
 
 >Using a centralized middleware approach to checking login status feels more efficient. The auth logic gets written once, and is applied across the entire site. Any changes to the auth flow can also be implemented in one file vs. each individual component. I do feel like the individual auth checks could still be useful in specific situations where you would want to check for a 'type' of user, but for this case the centralized middleware makes a lot of sense and is more efficient. 
+
+
+## Activity 6: Deployment, Webhooks, & AI-Testing
+
+### Prompt 1
+
+**What I asked:**
+
+>I have a Next.js app with Supabase Auth. Using @workspace context to
+understand the app structure, write an End-to-End (E2E) test file at
+tests/auth.spec.ts using Playwright.
+The tests should verify:
+1. LOGIN PAGE VISIBLE: Navigate to /login and confirm the login form
+   is visible (check for email input, password input, and submit button).
+2. REDIRECT AFTER LOGIN: After a successful login with valid credentials,
+   the user is redirected to the dashboard or projects page.
+3. SIDEBAR NAVIGATION: After login, verify that the sidebar navigation
+   links are visible: "Overview", "Projects", and "Settings".
+Requirements:
+- Use role-based locators (getByRole, getByLabel, getByText) instead of
+  CSS selectors or test IDs. This makes tests more accessible and resilient
+  to UI changes.
+- Add clear test descriptions that explain what each test verifies.
+- Handle the async nature of navigation and page loads with proper
+  Playwright waiting strategies.
+- Read test credentials from process.env.TEST_USER_EMAIL and
+  process.env.TEST_USER_PASSWORD. Do not hardcode credentials. If those
+  variables are not set, the credentialed tests should skip with a clear
+  message rather than fail.
+
+  **What happened:**
+
+  >The agent used role based locators.
+  >The agent understood the auth flow from the context. 
+  >The tests did not pass on the first run. 
+> The first two tests passed but the third test failed. "Call log: 'Overview' sidebar link should be visible after login with timeout 5000ms." 
+> I gave the error and its context to the agent, documented below. 
+
+### Prompt 2
+
+**What I asked:**
+>This playwright test is failing with the following error: 
+
+Error: "Overview" sidebar link should be visible after login
+
+expect(locator).toBeVisible() failed
+
+Locator: getByRole('link').filter({ hasText: 'Overview' })
+Expected: visible
+Error: strict mode violation: getByRole('link').filter({ hasText: 'Overview' }) resolved to 2 elements:
+    1) <a href="/" data-active="true" data-size="default" data-state="closed" data-sidebar="menu-button" data-slot="sidebar-menu-button" class="peer/menu-button group/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left ring-sidebar-ring outline-hidden transition-[width,height,padding] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar…>…</a> aka locator('ul').getByRole('link', { name: 'Overview' })
+    2) <span role="link" aria-current="page" aria-disabled="true" data-slot="breadcrumb-page" class="font-normal text-foreground">Overview</span> aka getByLabel('breadcrumb').getByRole('link', { name: 'Overview' })
+
+Call log:
+  - "Overview" sidebar link should be visible after login with timeout 5000ms
+  - waiting for getByRole('link').filter({ hasText: 'Overview' })
+
+**What happened:**
+
+>The agent successfully found the error. The problem was a strict mode violation. The locator was resolving to 2 elements:
+   The sidebar <a href="/">,
+   The breadcrumb <span role="link" aria-disabled="true">Overview</span>
+
+The page snapshot confirmed that the breadcrumb component renders the current page as a role="link" aria-disabled="true" span, which Playwright's .filter({ hasText }) picks up alongside the sidebar link.
+
+The fix was to apply disabled: false to all three locators for consistency: 
+If the user ever tests this on a /projects or /settings page where those names would also appear as disabled breadcrumb items, the locators will hold.
+
+### Reflection
+
+>Having AI write and run tests raises my confidence significantly before hitting the deploy button. The agent caught errors I would 100% have missed. Its ability to see the entire project, check for consistency, missing or incorrect code, allows me to deploy a website more confidently knowing that the agent looked over every file and ran tests successfully first. 
+
+>Manual tests in the browser are still useful but can get messy with lots of logs to the console and can be time consuming. 
+
+### Course Reflection
+
+>My prompting strategy has evolved significantly over the course of the semester. At the beginning, I would give short prompts that lacked detail and context which would result in cascading follow up prompts to correct the first one. I have learned that the more detailed instructions the better. Lots of small prompts may seem fine on a small project like this, but in the real world the projects will be large, and the context the agent will consume with each consecutive prompt will eat through an AI's usage quickly. I've learned to be extremely strategic with what and how I prompt the agent with. 
+

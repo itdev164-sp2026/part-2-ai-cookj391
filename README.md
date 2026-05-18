@@ -81,3 +81,8 @@ src/
 | `npm run build` | Production build             |
 | `npm run start` | Serve production build       |
 | `npm run lint`  | Run ESLint                   |
+
+
+## Live Site
+
+Deployed at: [https://part-2-ai-cookj391.vercel.app]
